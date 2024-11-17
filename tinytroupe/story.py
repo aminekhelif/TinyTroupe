@@ -58,7 +58,7 @@ class TinyStory:
                             }
 
         messages = utils.compose_initial_LLM_messages_with_templates("story.start.system.mustache", "story.start.user.mustache", rendering_configs)
-        next_message = openai_utils.client().send_message(messages, temperature=1.5)
+        next_message = openai_utils.client().send_message(messages, temperature=0.0)
 
         start = next_message["content"]
 
@@ -88,7 +88,7 @@ class TinyStory:
                             }
 
         messages = utils.compose_initial_LLM_messages_with_templates("story.continuation.system.mustache", "story.continuation.user.mustache", rendering_configs)
-        next_message = openai_utils.client().send_message(messages, temperature=1.5)
+        next_message = openai_utils.client().send_message(messages, temperature=0.0)
 
         continuation = next_message["content"]
 

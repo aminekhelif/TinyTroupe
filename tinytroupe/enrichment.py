@@ -30,7 +30,7 @@ class TinyEnricher(JsonSerializableRegistry):
                              "context_cache": context_cache}
 
         messages = utils.compose_initial_LLM_messages_with_templates("enricher.system.mustache", "enricher.user.mustache", rendering_configs)
-        next_message = openai_utils.client().send_message(messages, temperature=0.4)
+        next_message = openai_utils.client().send_message(messages, temperature=0.0)
         
         debug_msg = f"Enrichment result message: {next_message}"
         logger.debug(debug_msg)
