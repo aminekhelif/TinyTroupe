@@ -29,7 +29,7 @@ default["timeout"] = float(config["OpenAI"].get("TIMEOUT", "30.0"))
 default["max_attempts"] = float(config["OpenAI"].get("MAX_ATTEMPTS", "0.0"))
 default["waiting_time"] = float(config["OpenAI"].get("WAITING_TIME", "0.5"))
 default["exponential_backoff_factor"] = float(config["OpenAI"].get("EXPONENTIAL_BACKOFF_FACTOR", "5"))
-
+default["base_url"] = config["OpenAI"].get("BASE_URL", "https://api.openai.com/v1")
 default["embedding_model"] = config["OpenAI"].get("EMBEDDING_MODEL", "text-embedding-3-small")
 
 default["cache_api_calls"] = config["OpenAI"].getboolean("CACHE_API_CALLS", False)
@@ -106,7 +106,18 @@ class OpenAIClient:
         """
         Sets up the OpenAI API configurations for this client.
         """
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        # Try to use an explicit API key if provided
+        api_key = config["OpenAI"].get("API_KEY")
+        
+        if not api_key:
+            # Fall back to the environment variable if not found in the config
+            api_key = os.getenv("OPENAI_API_KEY")
+
+        if not api_key:
+            raise ValueError("API key for OpenAI is not set. Please provide one in the config or set the OPENAI_API_KEY environment variable.")
+
+        # Set up the client with the determined API key
+        self.client = OpenAI(base_url=default["base_url"], api_key=api_key)
 
     def send_message(self,
                     current_messages,
@@ -174,10 +185,10 @@ class OpenAIClient:
             try:
                 i += 1
 
-                try:
-                    logger.debug(f"Sending messages to OpenAI API. Token count={self._count_tokens(current_messages, model)}.")
-                except NotImplementedError:
-                    logger.debug(f"Token count not implemented for model {model}.")
+                # try:
+                #     logger.debug(f"Sending messages to OpenAI API. Token count={self._count_tokens(current_messages, model)}.")
+                # except NotImplementedError:
+                #     logger.debug(f"Token count not implemented for model {model}.")
                     
                 start_time = time.monotonic()
                 logger.debug(f"Calling model with client class {self.__class__.__name__}.")
@@ -188,15 +199,19 @@ class OpenAIClient:
                 cache_key = str((model, chat_api_params)) # need string to be hashable
                 if self.cache_api_calls and (cache_key in self.api_cache):
                     response = self.api_cache[cache_key]
+                    logger.debug(f"Got response from cache: {response}")
                 else:
                     logger.info(f"Waiting {waiting_time} seconds before next API request (to avoid throttling)...")
+                    logger.debug(f"Calling model with parameters: {chat_api_params}")
                     time.sleep(waiting_time)
                     
                     response = self._raw_model_call(model, chat_api_params)
                     if self.cache_api_calls:
+                        logger.debug(f"Saving response to cache.")
                         self.api_cache[cache_key] = response
                         self._save_cache()
-                
+                    else:
+                        logger.debug(f"Not saving response to cache.")                
                 
                 logger.debug(f"Got response from API: {response}")
                 end_time = time.monotonic()
@@ -250,6 +265,7 @@ class OpenAIClient:
         Extracts the response from the API response. Subclasses should
         override this method to implement their own response extraction.
         """
+        logger.debug(f"dict / content model response: {response.choices[0].message.to_dict()}")
         return response.choices[0].message.to_dict()
 
     def _count_tokens(self, messages: list, model: str):

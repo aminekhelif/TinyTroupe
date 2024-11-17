@@ -44,7 +44,8 @@ config = utils.read_config_file()
 default = {}
 default["embedding_model"] = config["OpenAI"].get("EMBEDDING_MODEL", "text-embedding-3-small")
 default["max_content_display_length"] = config["OpenAI"].getint("MAX_CONTENT_DISPLAY_LENGTH", 1024)
-
+default["api_key"] = config["OpenAI"].get("API_KEY", None)
+default["api_base"] = config["OpenAI"].get("API_BASE", "https://api.openai.com")
 
 ## LLaMa-Index configs ########################################################
 #from llama_index.embeddings.huggingface import HuggingFaceEmbedding
@@ -59,8 +60,8 @@ from llama_index.readers.web import SimpleWebPageReader
 ##    model_name="BAAI/bge-small-en-v1.5"
 ##)
 
-llmaindex_openai_embed_model = OpenAIEmbedding(model=default["embedding_model"], embed_batch_size=10)
-Settings.embed_model = llmaindex_openai_embed_model
+llamaindex_openai_embed_model = OpenAIEmbedding(model_name=default["embedding_model"],api_base= default["api_base"], embed_batch_size=10)
+Settings.embed_model = llamaindex_openai_embed_model
 ###############################################################################
 
 
@@ -432,8 +433,9 @@ class TinyPerson(JsonSerializableRegistry):
             role, content = self._produce_message()
 
             self.episodic_memory.store({'role': role, 'content': content, 'simulation_timestamp': self.iso_datetime()})
-
+            print(f"[{self.name}] --- {role}: {content}")
             cognitive_state = content["cognitive_state"]
+            print(f"[{self.name}] Cognitive state: {cognitive_state}")
 
 
             action = content['action']
@@ -686,6 +688,7 @@ class TinyPerson(JsonSerializableRegistry):
         self._configuration["current_context"] = {
             "description": item for item in context
         }
+        print(f"[{self.name}] Changed context to: {context}")
 
         self._update_cognitive_state(context=context)
 
