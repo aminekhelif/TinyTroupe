@@ -1,0 +1,34 @@
+{
+  "type": "json_schema",
+  "json_schema":{
+    "name": "story_teller",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "description": "The intended goal or aim of the simulation."
+        },
+        "requirements": {
+          "type": "string",
+          "description": "Specific requirements for the story, including plausibility and content guidelines."
+        },
+        "current_simulation_trace": {
+          "type": "string",
+          "description": "The current context of the simulation including events and characters."
+        },
+        "story_start": {
+          "type": "string",
+          "description": "The initial narrative or story development that sets the scene for the simulation."
+        }
+      },
+      "required": [
+        "purpose",
+        "requirements",
+        "current_simulation_trace",
+        "story_start"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  }}

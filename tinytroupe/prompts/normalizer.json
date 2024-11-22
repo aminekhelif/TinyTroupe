@@ -1,0 +1,35 @@
+{
+  "type": "json_schema",
+  "json_schema":{
+    "name": "normalizer",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "input_elements": {
+          "type": "array",
+          "description": "A list of input textual elements, such as concepts, passages or phrases.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "desired_output_count": {
+          "type": "number",
+          "description": "The number of desired output elements."
+        },
+        "output_elements": {
+          "type": "array",
+          "description": "A list of resulting output elements after normalization.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "input_elements",
+        "desired_output_count",
+        "output_elements"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  }}

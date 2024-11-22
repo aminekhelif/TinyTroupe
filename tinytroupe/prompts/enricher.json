@@ -1,0 +1,54 @@
+{
+  "type": "json_schema",
+  "json_schema":{
+    "name": "content_enricher",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "content_type": {
+          "type": "string",
+          "description": "The type of the content being enriched."
+        },
+        "requirements": {
+          "type": "string",
+          "description": "The enrichment requirements, outlining how the content should be modified."
+        },
+        "contextual_information": {
+          "type": "string",
+          "description": "Optional contextual information to better ground the enrichment."
+        },
+        "contextual_cache": {
+          "type": "object",
+          "description": "Optional cache of past enrichments.",
+          "properties": {
+            "cached_type": {
+              "type": "string",
+              "description": "The type of the cached content."
+            },
+            "cached_content": {
+              "type": "string",
+              "description": "The actual cached content."
+            }
+          },
+          "required": [
+            "cached_type",
+            "cached_content"
+          ],
+          "additionalProperties": false
+        },
+        "content": {
+          "type": "string",
+          "description": "The actual content to be enriched."
+        }
+      },
+      "required": [
+        "content_type",
+        "requirements",
+        "contextual_information",
+        "contextual_cache",
+        "content"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  }}

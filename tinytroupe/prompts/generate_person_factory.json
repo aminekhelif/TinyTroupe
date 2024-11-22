@@ -1,0 +1,32 @@
+{
+  "type": "json_schema",
+  "json_schema":{
+    "name": "person_description_contexts",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "number_of_factories": {
+          "type": "number",
+          "description": "The number of person descriptions to generate."
+        },
+        "context": {
+          "type": "string",
+          "description": "A broad context for generating person descriptions, including various parameters like demographics, physical characteristics, behaviors, beliefs, etc."
+        },
+        "person_descriptions": {
+          "type": "array",
+          "description": "A list of generated person descriptions based on the provided context.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "number_of_factories",
+        "context",
+        "person_descriptions"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  }}

@@ -1,0 +1,29 @@
+{
+  "type": "json_schema",
+  "json_schema":{
+    "name": "system",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "extraction_objective": {
+          "type": "string",
+          "description": "Defines precisely what is to be extracted from the interaction history."
+        },
+        "situation": {
+          "type": "string",
+          "description": "Describes the conditions that the agents were subject to."
+        },
+        "interaction_history": {
+          "type": "string",
+          "description": "The history of interactions, including stimuli received and actions performed by agents."
+        }
+      },
+      "required": [
+        "extraction_objective",
+        "situation",
+        "interaction_history"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  }}

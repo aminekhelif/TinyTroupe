@@ -1,0 +1,44 @@
+{
+  "type": "json_schema",
+  "json_schema":{
+    "name": "story_continuation",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "description": "The purpose of the simulation."
+        },
+        "requirements": {
+          "type": "string",
+          "description": "The specific requirements the story must respect."
+        },
+        "current_simulation_trace": {
+          "type": "string",
+          "description": "The current state of the story as a trace of simulation events."
+        },
+        "number_of_words": {
+          "type": "integer",
+          "description": "The word limit for the continuation."
+        },
+        "include_plot_twist": {
+          "type": "boolean",
+          "description": "Indicates if a plot twist must be included."
+        },
+        "continuation": {
+          "type": "string",
+          "description": "The proposed continuation of the story."
+        }
+      },
+      "required": [
+        "purpose",
+        "requirements",
+        "current_simulation_trace",
+        "number_of_words",
+        "include_plot_twist",
+        "continuation"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  }}

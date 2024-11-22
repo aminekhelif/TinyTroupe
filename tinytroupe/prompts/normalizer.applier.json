@@ -1,0 +1,38 @@
+{
+  "type": "json_schema",
+  "json_schema":{
+    "name": "normalizer",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "description": "A list of standard categories considered for normalization.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "elements": {
+          "type": "array",
+          "description": "A list of input items to be categorized.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "output": {
+          "type": "array",
+          "description": "A list of categories assigned to each input item based on similarity.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "categories",
+        "elements",
+        "output"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  }}

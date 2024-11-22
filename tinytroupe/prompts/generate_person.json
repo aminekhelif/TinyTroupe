@@ -1,0 +1,176 @@
+{
+  "type": "json_schema",
+  "json_schema":{
+    "name": "agent_schema",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the agent."
+        },
+        "_configuration": {
+          "type": "object",
+          "properties": {
+            "age": {
+              "type": "number",
+              "description": "The age of the agent between 18 and 65."
+            },
+            "nationality": {
+              "type": "string",
+              "description": "The nationality of the agent."
+            },
+            "country_of_residence": {
+              "type": "string",
+              "description": "The country where the agent resides."
+            },
+            "occupation": {
+              "type": "string",
+              "description": "The occupation of the agent."
+            },
+            "occupation_description": {
+              "type": "string",
+              "description": "A detailed description of the agent's occupation."
+            },
+            "routines": {
+              "type": "array",
+              "description": "A list of daily routines of the agent.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "routine": {
+                    "type": "string",
+                    "description": "Description of a routine the agent follows."
+                  }
+                },
+                "required": [
+                  "routine"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "personality_traits": {
+              "type": "array",
+              "description": "Personality traits of the agent.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "trait": {
+                    "type": "string",
+                    "description": "Description of a personality trait."
+                  }
+                },
+                "required": [
+                  "trait"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "professional_interests": {
+              "type": "array",
+              "description": "Professional interests of the agent.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "interest": {
+                    "type": "string",
+                    "description": "Description of a professional interest."
+                  }
+                },
+                "required": [
+                  "interest"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "personal_interests": {
+              "type": "array",
+              "description": "Personal interests of the agent.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "interest": {
+                    "type": "string",
+                    "description": "Description of a personal interest."
+                  }
+                },
+                "required": [
+                  "interest"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "skills": {
+              "type": "array",
+              "description": "Skills possessed by the agent.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "skill": {
+                    "type": "string",
+                    "description": "Description of a skill."
+                  }
+                },
+                "required": [
+                  "skill"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "relationships": {
+              "type": "array",
+              "description": "Relationships of the agent.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the person in the relationship."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the relationship."
+                  }
+                },
+                "required": [
+                  "name",
+                  "description"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "current_location": {
+              "type": "string",
+              "description": "Current location of the agent."
+            },
+            "emotions": {
+              "type": "string",
+              "description": "Current emotions of the agent."
+            }
+          },
+          "required": [
+            "age",
+            "nationality",
+            "country_of_residence",
+            "occupation",
+            "occupation_description",
+            "routines",
+            "personality_traits",
+            "professional_interests",
+            "personal_interests",
+            "skills",
+            "relationships",
+            "current_location",
+            "emotions"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "name",
+        "_configuration"
+      ],
+      "additionalProperties": false
+    },
+    "strict": true
+  }}
