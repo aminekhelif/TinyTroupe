@@ -23,14 +23,13 @@ import chevron  # to parse Mustache templates
 import logging
 logger = logging.getLogger("tinytroupe")
 import tinytroupe.utils as utils
-from tinytroupe.utils import post_init
+from tinytroupe.utils import post_init,json_load
 from tinytroupe.control import transactional
 from tinytroupe.control import current_simulation
 from rich import print
 import copy
 from tinytroupe.utils import JsonSerializableRegistry
-
-from typing import Any, TypeVar, Union
+from typing import Any, TypeVar, Union,TextIO
 
 Self = TypeVar("Self", bound="TinyPerson")
 AgentOrWorld = Union[Self, "TinyWorld"]
@@ -194,6 +193,9 @@ class TinyPerson(JsonSerializableRegistry):
 
         self._prompt_template_path = os.path.join(
             os.path.dirname(__file__), "prompts/tinyperson.mustache"
+        )
+        self.response_format = os.path.join(
+            os.path.dirname(__file__), "prompts/tinyperson.json"
         )
         self._init_system_message = None  # initialized later
 
@@ -745,8 +747,8 @@ class TinyPerson(JsonSerializableRegistry):
 
         logger.debug(f"[{self.name}] Sending messages to OpenAI API")
         logger.debug(f"[{self.name}] Last interaction: {messages[-1]}")
-
-        next_message = openai_utils.client().send_message(messages)
+        response_format = json_load(self.response_format)
+        next_message = openai_utils.client().send_message(messages,response_format=response_format)
 
         logger.debug(f"[{self.name}] Received message: {next_message}")
 
@@ -1794,3 +1796,6 @@ class SemanticMemory(TinyMemory):
     
         self.add_documents_paths(self.documents_paths)
         self.add_web_urls(self.documents_web_urls)
+        
+        
+
