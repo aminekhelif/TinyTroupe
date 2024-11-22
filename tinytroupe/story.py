@@ -57,8 +57,8 @@ class TinyStory:
                              "include_plot_twist": include_plot_twist
                             }
 
-        messages = utils.compose_initial_LLM_messages_with_templates("story.start.system.mustache", "story.start.user.mustache", rendering_configs)
-        next_message = openai_utils.client().send_message(messages, temperature=1.5)
+        messages,response_format = utils.compose_initial_LLM_messages_with_templates("story.start.system.mustache", "story.start.user.mustache","story.start.json", rendering_configs)
+        next_message = openai_utils.client().send_message(messages,response_format, temperature=1.5)
 
         start = next_message["content"]
 
@@ -87,8 +87,8 @@ class TinyStory:
                              "include_plot_twist": include_plot_twist
                             }
 
-        messages = utils.compose_initial_LLM_messages_with_templates("story.continuation.system.mustache", "story.continuation.user.mustache", rendering_configs)
-        next_message = openai_utils.client().send_message(messages, temperature=1.5)
+        messages,response_format = utils.compose_initial_LLM_messages_with_templates("story.continuation.system.mustache", "story.continuation.user.mustache","story.continuation.json", rendering_configs)
+        next_message = openai_utils.client().send_message(messages,response_format, temperature=1.5)
 
         continuation = next_message["content"]
 
