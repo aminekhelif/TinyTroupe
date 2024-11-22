@@ -23,7 +23,7 @@ logger = logging.getLogger("tinytroupe")
 from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld
 from tinytroupe.factory import TinyPersonFactory
-from tinytroupe.utils import JsonSerializableRegistry
+from tinytroupe.utils import JsonSerializableRegistry,json_load
 
 
 from tinytroupe import openai_utils
@@ -38,6 +38,33 @@ class ResultsExtractor:
         # generate reports or other additional outputs.
         self.agent_extraction = {}
         self.world_extraction = {}
+
+    def generate_response_format(self, fields, fields_hints=None):
+        response_format = {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "results_filter_schema",
+                "schema": {
+                    "type": ["object", "null"],
+                    "properties": {},
+                    "required": [],
+                    "additionalProperties": False
+                }
+            }
+        }
+
+        for field in fields:
+            field_description = f"Extracted value for field '{field}'"
+            if fields_hints and field in fields_hints:
+                field_description += f". {fields_hints[field]}"
+
+            response_format["json_schema"]["schema"]["properties"][field] = {
+                "type": ["string", "null"],
+                "description": field_description
+            }
+            response_format["json_schema"]["schema"]["required"].append(field)
+
+        return response_format
 
     def extract_results_from_agent(self, 
                         tinyperson:TinyPerson, 
@@ -94,7 +121,25 @@ performed.
 """
         messages.append({"role": "user", "content": extraction_request_prompt})
 
-        next_message = openai_utils.client().send_message(messages, temperature=0.0)
+        if fields is not None:
+            response_format = self.generate_response_format(fields, fields_hints)
+        else:
+            # If no fields are specified, allow any properties
+            response_format = {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "results_filter_schema",
+                    "schema": {
+                        "type": ["object", "null"],
+                        "additionalProperties": {
+                            "type": ["string", "null"],
+                            "description": "An extracted value."
+                        }
+                    }
+                }
+            }
+
+        next_message = openai_utils.client().send_message(messages, response_format=response_format, temperature=0.0)
         
         debug_msg = f"Extraction raw result message: {next_message}"
         logger.debug(debug_msg)
@@ -167,7 +212,25 @@ Each interaction history includes stimuli the corresponding agent received as we
 """
         messages.append({"role": "user", "content": extraction_request_prompt})
 
-        next_message = openai_utils.client().send_message(messages, temperature=0.0)
+        if fields is not None:
+            response_format = self.generate_response_format(fields, fields_hints)
+        else:
+            # If no fields are specified, allow any properties
+            response_format = {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "results_filter_schema",
+                    "schema": {
+                        "type": ["object", "null"],
+                        "additionalProperties": {
+                            "type": ["string", "null"],
+                            "description": "An extracted value."
+                        }
+                    }
+                }
+            }
+
+        next_message = openai_utils.client().send_message(messages, response_format=response_format, temperature=0.0)
         
         debug_msg = f"Extraction raw result message: {next_message}"
         logger.debug(debug_msg)
@@ -430,8 +493,8 @@ class Normalizer:
         rendering_configs = {"n": n,
                              "elements": self.elements}
 
-        messages = utils.compose_initial_LLM_messages_with_templates("normalizer.system.mustache", "normalizer.user.mustache", rendering_configs)
-        next_message = openai_utils.client().send_message(messages, temperature=0.1)
+        messages,response_format = utils.compose_initial_LLM_messages_with_templates("normalizer.system.mustache", "normalizer.user.mustache","normalizer.json", rendering_configs)
+        next_message = openai_utils.client().send_message(messages,response_format, temperature=0.1)
         
         debug_msg = f"Normalization result message: {next_message}"
         logger.debug(debug_msg)
@@ -483,8 +546,8 @@ class Normalizer:
             rendering_configs = {"categories": self.normalized_elements,
                                     "elements": elements_to_normalize}
             
-            messages = utils.compose_initial_LLM_messages_with_templates("normalizer.applier.system.mustache", "normalizer.applier.user.mustache", rendering_configs)
-            next_message = openai_utils.client().send_message(messages, temperature=0.1)
+            messages,response_format = utils.compose_initial_LLM_messages_with_templates("normalizer.applier.system.mustache", "normalizer.applier.user.mustache","normalizer.applier.json", rendering_configs)
+            next_message = openai_utils.client().send_message(messages, response_format,temperature=0.1)
             
             debug_msg = f"Normalization result message: {next_message}"
             logger.debug(debug_msg)
