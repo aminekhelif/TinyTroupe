@@ -8,6 +8,7 @@ logger = logging.getLogger("tinytroupe")
 from tinytroupe import openai_utils
 from tinytroupe.agent import TinyPerson
 import tinytroupe.utils as utils
+from tinytroupe.utils import json_load
 from tinytroupe.control import transactional
 
 class TinyFactory:
@@ -128,10 +129,10 @@ class TinyPersonFactory(TinyFactory):
             "number_of_factories": number_of_factories,
             "context": generic_context_text
         })
-
+        response_format = json_load(os.path.join(os.path.dirname(__file__), 'prompts/generate_person_factory.json'))
         messages.append({"role": "user", "content": user_prompt})
 
-        response = openai_utils.client().send_message(messages)
+        response = openai_utils.client().send_message(messages,response_format=response_format)
 
         if response is not None:
             result = utils.extract_json(response["content"])
@@ -170,9 +171,9 @@ class TinyPersonFactory(TinyFactory):
             messages = []
             messages += [{"role": "system", "content": "You are a system that generates specifications of artificial entities."},
                         {"role": "user", "content": prompt}]
-
+            response_format=json_load(os.path.join(os.path.dirname(__file__), 'prompts/generate_person.json'))
             # due to a technicality, we need to call an auxiliary method to be able to use the transactional decorator.
-            message = self._aux_model_call(messages=messages, temperature=temperature)
+            message = self._aux_model_call(messages=messages,response_format=response_format, temperature=temperature)
 
             if message is not None:
                 result = utils.extract_json(message["content"])
@@ -209,13 +210,13 @@ class TinyPersonFactory(TinyFactory):
         
     
     @transactional
-    def _aux_model_call(self, messages, temperature):
+    def _aux_model_call(self, messages,response_format ,temperature):
         """
         Auxiliary method to make a model call. This is needed in order to be able to use the transactional decorator,
         due too a technicality - otherwise, the agent creation would be skipped during cache reutilization, and
         we don't want that.
         """
-        return openai_utils.client().send_message(messages, temperature=temperature)
+        return openai_utils.client().send_message(messages,response_format, temperature=temperature)
     
     @transactional
     def _setup_agent(self, agent, configuration):
