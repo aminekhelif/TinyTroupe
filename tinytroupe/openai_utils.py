@@ -1,6 +1,8 @@
 import os
 import openai
-from openai import OpenAI, AzureOpenAI
+from openai import OpenAI, AzureOpenAI,_types
+from openai.types.shared_params.response_format_json_schema import JSONSchema
+from typing import cast
 import time
 import json
 import pickle
@@ -120,7 +122,8 @@ class OpenAIClient:
         self.client = OpenAI(base_url=default["base_url"], api_key=api_key)
 
     def send_message(self,
-                    current_messages,
+                     current_messages,
+                     response_format= _types.NOT_GIVEN,
                      model=default["model"],
                      temperature=default["temperature"],
                      max_tokens=default["max_tokens"],
@@ -165,9 +168,11 @@ class OpenAIClient:
         # setup the OpenAI configurations for this client.
         self._setup_from_config()
         
+        response_format = cast(JSONSchema, response_format)
         # We need to adapt the parameters to the API type, so we create a dictionary with them first
         chat_api_params = {
             "messages": current_messages,
+            "response_format":response_format,
             "temperature": temperature,
             "max_tokens":max_tokens,
             "top_p": top_p,
