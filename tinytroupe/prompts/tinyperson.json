@@ -1,329 +1,52 @@
+
 {
-  "type": "json_schema",
-  "json_schema":{
-    "name": "agent_specification",
-    "schema": {
-      "type": "object",
-      "properties": {
-        "simulation_properties": {
-          "type": "object",
-          "description": "Defines the properties of the simulation agent.",
-          "properties": {
-            "know_simulation": {
-              "type": "boolean",
-              "description": "Indicates whether the agent knows it is a simulation."
-            },
-            "follow_directives": {
-              "type": "boolean",
-              "description": "Indicates if the agent follows directives."
-            },
-            "maintain_persona": {
-              "type": "boolean",
-              "description": "Indicates if the agent maintains the described persona."
-            },
-            "goal_awareness": {
-              "type": "boolean",
-              "description": "Indicates if the agent is aware of its goals."
-            },
-            "location_awareness": {
-              "type": "boolean",
-              "description": "Indicates if the agent is aware of its location."
-            }
-          },
-          "required": [
-            "know_simulation",
-            "follow_directives",
-            "maintain_persona",
-            "goal_awareness",
-            "location_awareness"
-          ],
-          "additionalProperties": false
-        },
-        "interpretation_specification": {
-          "type": "object",
-          "description": "Specification for interpreting the agent's behavior.",
-          "properties": {
-            "section_description": {
-              "type": "string",
-              "description": "Description of aspects of the agent's life."
-            },
-            "characteristics": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "List of characteristics of the agent."
-            },
-            "internal_aspects_confidential": {
-              "type": "boolean",
-              "description": "Indicates if internal aspects are confidential."
-            }
-          },
-          "required": [
-            "section_description",
-            "characteristics",
-            "internal_aspects_confidential"
-          ],
-          "additionalProperties": false
-        },
-        "interaction_directives": {
-          "type": "object",
-          "description": "Directives for agent interactions.",
-          "properties": {
-            "stimuli_types": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Types of stimuli through which the agent perceives the environment."
-            },
-            "available_actions": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "action_type": {
-                    "type": "string",
-                    "description": "Type of action available."
-                  },
-                  "action_content": {
-                    "type": "string",
-                    "description": "Content of the action."
-                  },
-                  "target": {
-                    "type": "string",
-                    "description": "Target for the action."
-                  }
-                },
-                "required": [
-                  "action_type",
-                  "action_content",
-                  "target"
-                ],
-                "additionalProperties": false
-              }
-            },
-            "constraints": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Constraints that govern the actions of the agent."
-            }
-          },
-          "required": [
-            "stimuli_types",
-            "available_actions",
-            "constraints"
-          ],
-          "additionalProperties": false
-        },
-        "persona": {
-          "type": "object",
-          "description": "Detailed information about the persona of the agent.",
-          "properties": {
-            "personal_info": {
-              "type": "object",
-              "description": "Personal characteristics of the agent.",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "age": {
-                  "type": "number"
-                },
-                "nationality": {
-                  "type": "string"
-                },
-                "country_of_residence": {
-                  "type": "string"
-                },
-                "occupation": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "name",
-                "age",
-                "nationality",
-                "country_of_residence",
-                "occupation"
-              ],
-              "additionalProperties": false
-            },
-            "routine": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Daily routines followed by the agent."
-            },
-            "occupation_description": {
-              "type": "string",
-              "description": "Description of the agent's occupation."
-            },
-            "personality_traits": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Traits that describe the agent's personality."
-            },
-            "interests": {
-              "type": "object",
-              "properties": {
-                "professional_interests": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "List of professional interests."
-                },
-                "personal_interests": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "List of personal interests."
-                }
-              },
-              "required": [
-                "professional_interests",
-                "personal_interests"
-              ],
-              "additionalProperties": false
-            },
-            "skills": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Skills possessed by the agent."
-            },
-            "relationships": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "name",
-                  "description"
-                ],
-                "additionalProperties": false
-              },
-              "description": "Relationships the agent has with others."
-            }
-          },
-          "required": [
-            "personal_info",
-            "routine",
-            "occupation_description",
-            "personality_traits",
-            "interests",
-            "skills",
-            "relationships"
-          ],
-          "additionalProperties": false
-        },
-        "current_cognitive_state": {
-          "type": "object",
-          "description": "Describes the agent's current mental state.",
-          "properties": {
-            "temporal_spatial_perception": {
-              "type": "object",
-              "properties": {
-                "current_datetime": {
-                  "type": "string"
-                },
-                "current_location": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "current_datetime",
-                "current_location"
-              ],
-              "additionalProperties": false
-            },
-            "contextual_perception": {
-              "type": "object",
-              "properties": {
-                "general_context_description": {
-                  "type": "string"
-                },
-                "social_context": {
-                  "type": "array",
-                  "items": {
+    "type": "json_schema",
+    "json_schema": {
+        "name": "agent_response_schema",
+        "schema": {
+            "type": "object",
+            "properties": {
+                "action": {
                     "type": "object",
                     "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "relation_description": {
-                        "type": "string"
-                      }
+                        "type": {
+                            "type": "string",
+                            "description": "The nature of the action."
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "The content of the action, depending on the action type."
+                        },
+                        "target": {
+                            "type": "string",
+                            "description": "The specific entity towards which the action is directed, if any."
+                        }
                     },
-                    "required": [
-                      "name",
-                      "relation_description"
-                    ],
+                    "required": ["type", "content", "target"],
                     "additionalProperties": false
-                  }
+                },
+                "cognitive_state": {
+                    "type": "object",
+                    "properties": {
+                        "goals": {
+                            "type": "string",
+                            "description": "The agent's current goals."
+                        },
+                        "attention": {
+                            "type": "string",
+                            "description": "What the agent is currently paying attention to."
+                        },
+                        "emotions": {
+                            "type": "string",
+                            "description": "The agent's current emotional state."
+                        }
+                    },
+                    "required": ["goals", "attention", "emotions"],
+                    "additionalProperties": false
                 }
-              },
-              "required": [
-                "general_context_description",
-                "social_context"
-              ],
-              "additionalProperties": false
             },
-            "attention": {
-              "type": "string",
-              "description": "What the agent is currently paying attention to."
-            },
-            "goals": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Goals the agent aims to accomplish."
-            },
-            "emotional_state": {
-              "type": "string",
-              "description": "Current emotions of the agent."
-            },
-            "memory_of_interactions": {
-              "type": "string",
-              "description": "Recent interactions that the agent remembers."
-            }
-          },
-          "required": [
-            "temporal_spatial_perception",
-            "contextual_perception",
-            "attention",
-            "goals",
-            "emotional_state",
-            "memory_of_interactions"
-          ],
-          "additionalProperties": false
+            "required": ["action", "cognitive_state"],
+            "additionalProperties": false
         }
-      },
-      "required": [
-        "simulation_properties",
-        "interpretation_specification",
-        "interaction_directives",
-        "persona",
-        "current_cognitive_state"
-      ],
-      "additionalProperties": false,
-      "$defs": {}
-    },
-    "strict": true
-  }}
+    }
+}
