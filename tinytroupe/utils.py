@@ -14,7 +14,9 @@ from typing import Collection
 from datetime import datetime
 from pathlib import Path
 import configparser
-from typing import Any, TypeVar, Union
+from typing import Any, TypeVar, Union,TextIO
+import json
+
 AgentOrWorld = Union["TinyPerson", "TinyWorld"]
 
 # logger
@@ -25,7 +27,7 @@ logger = logging.getLogger("tinytroupe")
 # Model input utilities
 ################################################################################
 
-def compose_initial_LLM_messages_with_templates(system_template_name:str, user_template_name:str=None, rendering_configs:dict={}) -> list:
+def compose_initial_LLM_messages_with_templates(system_template_name:str, user_template_name:str=None,response_format:str=None, rendering_configs:dict={}) -> list:
     """
     Composes the initial messages for the LLM model call, under the assumption that it always involves 
     a system (overall task description) and an optional user message (specific task description). 
@@ -34,6 +36,7 @@ def compose_initial_LLM_messages_with_templates(system_template_name:str, user_t
 
     system_prompt_template_path = os.path.join(os.path.dirname(__file__), f'prompts/{system_template_name}')
     user_prompt_template_path = os.path.join(os.path.dirname(__file__), f'prompts/{user_template_name}')
+    response_format = os.path.join(os.path.dirname(__file__), f'prompts/{response_format}')
 
     messages = []
 
@@ -48,6 +51,9 @@ def compose_initial_LLM_messages_with_templates(system_template_name:str, user_t
                             "content": chevron.render(
                                     open(user_prompt_template_path).read(), 
                                     rendering_configs)})
+    if response_format is not None:
+        response_format = json_load(response_format)
+        return messages,response_format
     return messages
 
 
@@ -498,3 +504,10 @@ def fresh_id():
     global _fresh_id_counter
     _fresh_id_counter += 1
     return _fresh_id_counter
+
+def json_load(f_or_path: Union[str, TextIO]) -> Any:
+    if isinstance(f_or_path, str):
+        with open(f_or_path, 'r') as f:
+            return json.load(f)
+    else:
+        return json.load(f_or_path)
