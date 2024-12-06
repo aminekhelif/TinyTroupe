@@ -425,7 +425,7 @@ class TinyPerson(JsonSerializableRegistry):
 
         # Aux function to perform exactly one action.
         # Occasionally, the model will return JSON missing important keys, so we just ask it to try again
-        @repeat_on_error(retries=5, exceptions=[KeyError])
+        @repeat_on_error(retries=5, exceptions=[KeyError, TypeError])
         def aux_act_once():
             # A quick thought before the action. This seems to help with better model responses, perhaps because
             # it interleaves user with assistant messages.
@@ -435,9 +435,7 @@ class TinyPerson(JsonSerializableRegistry):
             role, content = self._produce_message()
 
             self.episodic_memory.store({'role': role, 'content': content, 'simulation_timestamp': self.iso_datetime()})
-            print(f"[{self.name}] --- {role}: {content}")
             cognitive_state = content["cognitive_state"]
-            print(f"[{self.name}] Cognitive state: {cognitive_state}")
 
 
             action = content['action']
@@ -1403,7 +1401,7 @@ class FilesAndWebGroundingFaculty(TinyMentalFaculty):
             return True
         
         elif action['type'] == "LIST_DOCUMENTS" and action['content'] is not None:
-            documents_names = self.semantic_memory.list_documents_names()
+            documents_names = agent.semantic_memory.list_documents_names()
 
             if len(documents_names) > 0:
                 agent.think(f"I have the following documents available to me: {documents_names}")
