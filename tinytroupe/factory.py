@@ -146,7 +146,7 @@ class TinyPersonFactory(TinyFactory):
 
         return None
 
-    def generate_person(self, agent_particularities:str=None, temperature:float=1.5, attepmpts:int=5):
+    def generate_person(self, agent_particularities:str=None, temperature:float=0.0, attepmpts:int=5):
         """
         Generate a TinyPerson instance using OpenAI's LLM.
 

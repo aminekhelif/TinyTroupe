@@ -493,8 +493,8 @@ class Normalizer:
         rendering_configs = {"n": n,
                              "elements": self.elements}
 
-        messages,response_format = utils.compose_initial_LLM_messages_with_templates("normalizer.system.mustache", "normalizer.user.mustache","normalizer.json", rendering_configs)
-        next_message = openai_utils.client().send_message(messages,response_format, temperature=0.1)
+        messages = utils.compose_initial_LLM_messages_with_templates("normalizer.system.mustache", "normalizer.user.mustache", rendering_configs)
+        next_message = openai_utils.client().send_message(messages, temperature=0.0)
         
         debug_msg = f"Normalization result message: {next_message}"
         logger.debug(debug_msg)
@@ -546,8 +546,8 @@ class Normalizer:
             rendering_configs = {"categories": self.normalized_elements,
                                     "elements": elements_to_normalize}
             
-            messages,response_format = utils.compose_initial_LLM_messages_with_templates("normalizer.applier.system.mustache", "normalizer.applier.user.mustache","normalizer.applier.json", rendering_configs)
-            next_message = openai_utils.client().send_message(messages, response_format,temperature=0.1)
+            messages = utils.compose_initial_LLM_messages_with_templates("normalizer.applier.system.mustache", "normalizer.applier.user.mustache", rendering_configs)
+            next_message = openai_utils.client().send_message(messages, temperature=0.1)
             
             debug_msg = f"Normalization result message: {next_message}"
             logger.debug(debug_msg)
